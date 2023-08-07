@@ -10,6 +10,10 @@ debug = True
 
 CORS(app)
 
+@app.get('/')
+def index():
+  return "Hi, You!"
+  
 @app.post('/video/v2')
 def video():
   body = request.form
