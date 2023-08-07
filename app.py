@@ -1,12 +1,12 @@
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
-from os import abspath, dirname
+import os
 
 import moviepy.editor as mp
 import json
 
 app = Flask(__name__)
-CURRENT_DIRECTORY = dirname(abspath(__file__))
+CURRENT_DIRECTORY = os.getcwd()
 port = 4000
 debug = True
 
@@ -25,8 +25,8 @@ def video():
   photo = request.files['file']
   video = request.files['video']
 
-  photo.save('./images/'+photo.filename) 
-  video.save('./videos/'+video.filename) 
+  photo.save(CURRENT_DIRECTORY+'/images/'+photo.filename) 
+  video.save(CURRENT_DIRECTORY+'/videos/'+video.filename) 
 
   generarVideo(
     srcImagen=photo.filename, 
@@ -40,8 +40,8 @@ def generarVideo(srcVideo, srcImagen, options):
   VIDEO_FPS = 25
   VIDEO_CODEC = 'libx264'
   
-  video = mp.VideoFileClip('./videos/'+srcVideo)
-  image = mp.ImageClip('./images/'+srcImagen)
+  video = mp.VideoFileClip(CURRENT_DIRECTORY+'/videos/'+srcVideo)
+  image = mp.ImageClip(CURRENT_DIRECTORY+'/images/'+srcImagen)
 
   images = [video]
   for opt in options:
@@ -57,7 +57,7 @@ def generarVideo(srcVideo, srcImagen, options):
     images.append(img)
 
   videoFinal = mp.CompositeVideoClip(images)
-  videoFinal.subclip(0,video.duration).write_videofile("./output/testFinal.mp4",fps=VIDEO_FPS, codec=VIDEO_CODEC, verbose=False)
+  videoFinal.subclip(0,video.duration).write_videofile(CURRENT_DIRECTORY+"/output/testFinal.mp4",fps=VIDEO_FPS, codec=VIDEO_CODEC, verbose=False)
 
   return jsonify({"status": True})
 
