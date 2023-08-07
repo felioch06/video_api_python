@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS
+from os import abspath, dirname
 
 import moviepy.editor as mp
 import json
 
 app = Flask(__name__)
+CURRENT_DIRECTORY = dirname(abspath(__file__))
 port = 4000
 debug = True
 
@@ -12,7 +14,7 @@ CORS(app)
 
 @app.get('/')
 def index():
-  return "Hi, You!"
+  return CURRENT_DIRECTORY
   
 @app.post('/video/v2')
 def video():
